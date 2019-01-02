@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:padding="8dp"
+        android:background="#FFF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/data_usage_text_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/data_usage_volume"
+            app:layout_constraintEnd_toStartOf="@+id/img_warning"/>
+
+    <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/data_usage_volume"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/data_usage_text_year"
+            app:layout_constraintStart_toStartOf="@+id/data_usage_text_year"
+            app:layout_constraintBottom_toBottomOf="@+id/data_usage_text_year"
+            app:layout_constraintEnd_toEndOf="@+id/data_usage_text_year"/>
+
+    <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/img_warning"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:visibility="gone"
+            android:tint="@color/colorAccent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/data_usage_text_year"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/ic_warning_black_24dp"/>
+</android.support.constraint.ConstraintLayout>
