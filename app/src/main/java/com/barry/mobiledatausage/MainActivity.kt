@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.Toast
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.Item
@@ -15,11 +16,9 @@ import java.text.DecimalFormat
 
 class MainActivity : AppCompatActivity(), MainActivityContract.View {
 
-    val TAG = MainActivity::class.java.simpleName
-
     private lateinit var presenter: MainActivityPresenter
     private var listAdapter = GroupAdapter<ViewHolder>()
-    var hasDecreaseUsage = false
+    private val decimalFormat = DecimalFormat("#.######")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +48,6 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
     }
 
     override fun hideProgressDialog() {
-
         Handler().postDelayed({ refresh_layout.isRefreshing = false }, 1000)
     }
 
@@ -57,21 +55,24 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
         Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showDataUsageList(annualDataUsage: MutableMap<String, Double>) {
+    override fun showDataUsageList(annualDataUsage: MutableMap<String, Model.AnnualDataUsage>) {
         listAdapter.clear()
 
         annualDataUsage.forEach {
-            listAdapter.add(DataUsageItem(Model.AnnualDataUsage(it.key, it.value)))
+            listAdapter.add(DataUsageItem(it.value))
         }
     }
 
-    private class DataUsageItem(val dataUsage: Model.AnnualDataUsage) : Item() {
-        val decimalFormat = DecimalFormat("#.######")
+    private inner class DataUsageItem(val dataUsage: Model.AnnualDataUsage) : Item() {
 
         override fun bind(viewHolder: ViewHolder, position: Int) {
             viewHolder.itemView.apply {
-                data_usage_text_year.text = dataUsage.year
-                data_usage_volume.text = decimalFormat.format(dataUsage.volume)
+                data_usage_text_year_value.text = dataUsage.year
+                data_usage_volume_value.text = decimalFormat.format(dataUsage.volume)
+
+                if (dataUsage.hasDecreasedUsage) {
+                    data_usage_img_warning.visibility = View.VISIBLE
+                }
             }
         }
 

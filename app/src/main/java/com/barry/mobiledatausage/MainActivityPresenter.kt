@@ -1,6 +1,5 @@
 package com.barry.mobiledatausage
 
-import android.util.Log
 import com.barry.mobiledatausage.api.ApiManager
 import com.barry.mobiledatausage.api.ApiService
 import com.google.gson.Gson
@@ -19,17 +18,17 @@ class MainActivityPresenter(private val mainView: MainActivityContract.View) : M
 
             if (isSuccess && error == null) {
                 val listType = object : TypeToken<List<Model.QuarterlyDataUsage>>() {}.type
-                val quarterlyDataUsageRecords: List<Model.QuarterlyDataUsage>
+                val qduList: List<Model.QuarterlyDataUsage>
 
                 try {
-                    quarterlyDataUsageRecords = Gson().fromJson<List<Model.QuarterlyDataUsage>>(
+                    qduList = Gson().fromJson<List<Model.QuarterlyDataUsage>>(
                         response?.getJSONObject("result")?.getJSONArray("records").toString(),
                         listType
                     )
 
-                    map(quarterlyDataUsageRecords)
+                    parseResponse(qduList)
                 } catch (je: JSONException) {
-                    mainView.showError("Oops! -> ${je.localizedMessage}")
+                    mainView.showError(je.localizedMessage)
                 }
             } else {
                 mainView.showError()
@@ -37,29 +36,31 @@ class MainActivityPresenter(private val mainView: MainActivityContract.View) : M
         }
     }
 
-    private fun map(quarterlyDataUsageRecords: List<Model.QuarterlyDataUsage>) {
-        val annualDataUsage = mutableMapOf<String, Double>()
+    private fun parseResponse(quarterlyDataUsageRecords: List<Model.QuarterlyDataUsage>) {
+        val aduList = mutableMapOf<String, Model.AnnualDataUsage>()
         var tempVolume = 0.00
+        var tempYear = 0
 
         quarterlyDataUsageRecords.forEach { it ->
             val year = it.year.substring(0, 4)
 
-            Log.d("fak", "year: ${it.year} volume: ${it.volume.toDouble()} tempVolume: $tempVolume")
-
-            if (annualDataUsage.containsKey(year)) {
+            if (aduList.containsKey(year)) {
                 if (it.volume.toDouble() < tempVolume) {
-                    //TODO: maglagay ng indicator
-
-                    Log.d("bars", "year: $year")
+                    tempYear = year.toInt()
                     tempVolume = it.volume.toDouble()
                 }
-                annualDataUsage[year] = annualDataUsage.getValue(year).toDouble() + it.volume.toDouble()
+
+                aduList[year] = Model.AnnualDataUsage(
+                    year,
+                    aduList.getValue(year).volume + it.volume.toDouble(),
+                    tempYear == year.toInt()
+                )
             } else {
                 tempVolume = it.volume.toDouble()
-                annualDataUsage[year] = it.volume.toDouble()
+                aduList[year] = Model.AnnualDataUsage(year, it.volume.toDouble())
             }
         }
 
-        mainView.showDataUsageList(annualDataUsage)
+        mainView.showDataUsageList(aduList)
     }
 }

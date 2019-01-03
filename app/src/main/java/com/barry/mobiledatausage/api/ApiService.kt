@@ -24,12 +24,11 @@ class ApiService : ApiServiceInterface {
                 completionHandler(true, null, response)
             },
             Response.ErrorListener { error ->
-                VolleyLog.e(TAG, "response error: ${error.message}")
+                Log.e(TAG, "response error: ${error.localizedMessage}")
 
                 completionHandler(false, error, null)
             }) {}
 
         BaseApplication.instance?.addToRequestQueue(jsonObjReq, TAG)
     }
-
 }
