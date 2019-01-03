@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">MobileDataUsage</string>
+    <string name="app_name">Mobile Data Usage</string>
+    <string name="data_usage_year_label">Year:</string>
+    <string name="data_usage_volume_label">Volume:</string>
 </resources>

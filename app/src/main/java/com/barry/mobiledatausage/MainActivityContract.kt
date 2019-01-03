@@ -7,11 +7,10 @@ class MainActivityContract {
         fun showProgressDialog()
         fun hideProgressDialog()
         fun showError(message: String = "Something went wrong")
-        fun showDataUsageList(annualDataUsage: MutableMap<String, Double>)
+        fun showDataUsageList(annualDataUsage: MutableMap<String, Model.AnnualDataUsage>)
     }
 
     interface Presenter {
         fun callDataUsageApi()
     }
-
 }
