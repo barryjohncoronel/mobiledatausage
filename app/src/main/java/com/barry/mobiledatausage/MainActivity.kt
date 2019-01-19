@@ -72,6 +72,8 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
 
                 if (dataUsage.hasDecreasedUsage) {
                     data_usage_img_warning.visibility = View.VISIBLE
+                } else {
+                    data_usage_img_warning.visibility = View.GONE
                 }
             }
         }
